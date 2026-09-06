@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="m_WindowTitle">Управління автопарком</sys:String>
+    <sys:String x:Key="m_Language">Мова</sys:String>
+
+    <sys:String x:Key="m_AddTitle">Додати новий автомобіль</sys:String>
+    <sys:String x:Key="m_Vin">VIN-код:</sys:String>
+    <sys:String x:Key="m_Type">Тип:</sys:String>
+    <sys:String x:Key="m_Brand">Марка:</sys:String>
+    <sys:String x:Key="m_Model">Модель:</sys:String>
+    <sys:String x:Key="m_Latitude">Широта (Lat):</sys:String>
+    <sys:String x:Key="m_Longitude">Довгота (Lon):</sys:String>
+    <sys:String x:Key="m_Capacity">Ємність (Бак/АКБ):</sys:String>
+    <sys:String x:Key="m_AddButton">Додати в БД</sys:String>
+
+    <sys:String x:Key="m_Refresh">Оновити список</sys:String>
+    <sys:String x:Key="m_ToggleEngine">Двигун (Завести/Заглушити)</sys:String>
+    <sys:String x:Key="m_ToggleDoors">Двері (Заблокувати/Розблокувати)</sys:String>
+    <sys:String x:Key="m_Delete">Видалити вибране</sys:String>
+
+    <sys:String x:Key="m_ColVin">VIN</sys:String>
+    <sys:String x:Key="m_ColBrand">Марка</sys:String>
+    <sys:String x:Key="m_ColModel">Модель</sys:String>
+    <sys:String x:Key="m_ColEngine">Двигун</sys:String>
+    <sys:String x:Key="m_ColDoors">Двері</sys:String>
+    <sys:String x:Key="m_ColLocation">Координати</sys:String>
+
+    <sys:String x:Key="msg_FillRequired">Будь ласка, заповніть VIN, Марку та Модель!</sys:String>
+    <sys:String x:Key="msg_InputErrorTitle">Помилка введення</sys:String>
+    <sys:String x:Key="msg_AddSuccess">Автомобіль успішно додано до бази даних!</sys:String>
+    <sys:String x:Key="msg_SuccessTitle">Успіх</sys:String>
+    <sys:String x:Key="msg_DbError">Помилка бази даних! Можливо, автомобіль з таким VIN вже існує в базі.</sys:String>
+    <sys:String x:Key="msg_DbErrorTitle">Помилка запису в БД</sys:String>
+    <sys:String x:Key="msg_ErrorTitle">Помилка</sys:String>
+</ResourceDictionary>
