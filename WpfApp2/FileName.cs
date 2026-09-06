@@ -11,7 +11,7 @@ using ProjectFIN.models;
 
 namespace ProjectFIN.UI
 {
-    public class MainViewModel : ObservableObject
+    public class MainViewModel : ObservableObject 
     {
         private ObservableCollection<Vehicle> _vehicles = new();
         private Vehicle? _selectedVehicle;
