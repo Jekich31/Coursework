@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ProjectFIN.models;
+using System.Windows;
 
 namespace ProjectFIN.UI
 {
@@ -6,13 +7,12 @@ namespace ProjectFIN.UI
     {
         public MainWindow()
         {
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
+            }
             InitializeComponent();
             DataContext = new MainViewModel();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

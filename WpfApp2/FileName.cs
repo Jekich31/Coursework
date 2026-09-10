@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using ProjectFIN.models;
+using ProjectFIN.services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using ProjectFIN.services;
-using ProjectFIN.models;
+using System.Windows.Threading;
 
 namespace ProjectFIN.UI
 {
@@ -16,7 +17,7 @@ namespace ProjectFIN.UI
         private ObservableCollection<Vehicle> _vehicles = new();
         private Vehicle? _selectedVehicle;
         private bool _isLoading;
-        private double _capacity = 50;
+        private double _capacity = 50; 
 
         public double Capacity
         {
@@ -92,7 +93,7 @@ namespace ProjectFIN.UI
         public IAsyncRelayCommand ToggleEngineCommand { get; }
         public IAsyncRelayCommand ToggleDoorsCommand { get; }
         public IRelayCommand<string> ChangeLanguageCommand { get; }
-
+        private DispatcherTimer _fuelTimer;
         public MainViewModel()
         {
             LoadVehiclesCommand = new AsyncRelayCommand(LoadVehiclesAsync);
@@ -104,8 +105,44 @@ namespace ProjectFIN.UI
             ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
 
             ChangeLanguage("UKR");
+            _ = LoadVehiclesAsync();
+            _fuelTimer = new DispatcherTimer();
+            _fuelTimer.Interval = TimeSpan.FromSeconds(2);
+            _fuelTimer.Tick += FuelTimer_Tick;
+            _fuelTimer.Start();
         }
+        private async void FuelTimer_Tick(object? sender, EventArgs e)
+        {
+            bool hasChanges = false;
 
+            using (var context = new AppDbContext())
+            {
+                foreach (var vehicle in Vehicles)
+                {
+                    if (vehicle.Engine == EngineState.Running)
+                    {
+                        vehicle.ConsumeResource(0.2);
+                        hasChanges = true;
+
+                        context.Vehicles.Update(vehicle);
+                    }
+                }
+
+                if (hasChanges)
+                {
+                    try
+                    {
+                        await context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Помилка збереження палива в БД: {ex.Message}");
+                    }
+                    OnPropertyChanged(nameof(Vehicles));
+                    OnPropertyChanged(nameof(SelectedVehicle));
+                }
+            }
+        }
         private void ChangeLanguage(string? langCode)
         {
             if (string.IsNullOrEmpty(langCode)) return;
@@ -154,11 +191,6 @@ namespace ProjectFIN.UI
 
                 using (var context = new AppDbContext())
                 {
-                    if (newVehicle.LocationData != null)
-                    {
-                        context.Entry(newVehicle.LocationData).State = EntityState.Added;
-                    }
-
                     await context.Vehicles.AddAsync(newVehicle);
                     await context.SaveChangesAsync();
                 }
@@ -193,25 +225,31 @@ namespace ProjectFIN.UI
         private async Task ToggleEngineAsync()
         {
             if (SelectedVehicle == null) return;
-
-            if (SelectedVehicle.Engine == EngineState.Running)
+            try
             {
-                SelectedVehicle.StopEngine();
-            }
-            else
-            {
-                SelectedVehicle.StartEngine();
-            }
 
-            using (var context = new AppDbContext())
-            {
-                context.Vehicles.Update(SelectedVehicle);
-                await context.SaveChangesAsync();
-            }
+                if (SelectedVehicle.Engine == EngineState.Running)
+                {
+                    SelectedVehicle.StopEngine();
+                }
+                else
+                {
+                    SelectedVehicle.StartEngine();
+                }
 
-            OnPropertyChanged(nameof(SelectedVehicle));
+                using (var context = new AppDbContext())
+                {
+                    context.Vehicles.Update(SelectedVehicle);
+                    await context.SaveChangesAsync();
+                }
+
+                OnPropertyChanged(nameof(SelectedVehicle));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to toggle engine state: {ex.Message}", "Engine Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
         private async Task ToggleDoorsAsync()
         {
             if (SelectedVehicle == null) return;

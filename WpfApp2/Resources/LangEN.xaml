@@ -8,6 +8,8 @@
     <sys:String x:Key="m_AddTitle">Add New Vehicle</sys:String>
     <sys:String x:Key="m_Vin">VIN code:</sys:String>
     <sys:String x:Key="m_Type">Type:</sys:String>
+    <sys:String x:Key="m_TypeGasoline">Gasoline Car</sys:String>
+    <sys:String x:Key="m_TypeElectric">Electric Car</sys:String>
     <sys:String x:Key="m_Brand">Brand:</sys:String>
     <sys:String x:Key="m_Model">Model:</sys:String>
     <sys:String x:Key="m_Latitude">Latitude (Lat):</sys:String>
@@ -25,6 +27,7 @@
     <sys:String x:Key="m_ColModel">Model</sys:String>
     <sys:String x:Key="m_ColEngine">Engine</sys:String>
     <sys:String x:Key="m_ColDoors">Doors</sys:String>
+    <sys:String x:Key="m_ColLevel">Fuel/Charge Level</sys:String>
     <sys:String x:Key="m_ColLocation">Location</sys:String>
 
     <sys:String x:Key="msg_FillRequired">Please fill in VIN, Brand, and Model!</sys:String>
@@ -34,4 +37,7 @@
     <sys:String x:Key="msg_DbError">Database error! A vehicle with this VIN may already exist.</sys:String>
     <sys:String x:Key="msg_DbErrorTitle">Database Save Error</sys:String>
     <sys:String x:Key="msg_ErrorTitle">Error</sys:String>
+    <sys:String x:Key="msg_NoFuel">Cannot start engine: fuel/charge is empty!</sys:String>
+    <sys:String x:Key="msg_EngineErrorTitle">Engine Error</sys:String>
+
 </ResourceDictionary>

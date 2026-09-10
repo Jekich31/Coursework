@@ -101,7 +101,23 @@
                             <TextBlock Text="{DynamicResource m_ColDoors}"/>
                         </DataGridTextColumn.Header>
                     </DataGridTextColumn>
-
+                    <DataGridTemplateColumn Header="{DynamicResource m_ColLevel}" Width="1.5*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="4,2">
+                                    <ProgressBar Value="{Binding CurrentLevel, Mode=OneWay}" 
+                             Maximum="{Binding Capacity, Mode=OneWay}" 
+                             Height="16"/>
+                                    <TextBlock Text="{Binding CapacityInfo, Mode=OneWay}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="10" 
+                           FontWeight="Bold" 
+                           Foreground="Black"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding LocationData}" Width="*">
                         <DataGridTextColumn.Header>
                             <TextBlock Text="{DynamicResource m_ColLocation}"/>

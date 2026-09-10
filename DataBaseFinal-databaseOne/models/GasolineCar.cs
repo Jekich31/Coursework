@@ -10,7 +10,7 @@ public class GasolineCar : Vehicle
 
     public GasolineCar() : base() { }
     public GasolineCar(string vin, string brand, string model, double startLat, double startLng, double fuelTankCapacity)
-        : base(vin, brand, model, startLat, startLng)
+     : base(vin, brand, model, startLat, startLng, capacity: fuelTankCapacity, currentLevel: fuelTankCapacity)
     {
         FuelTankCapacity = fuelTankCapacity;
         CurrentFuel = fuelTankCapacity;

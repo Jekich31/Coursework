@@ -17,19 +17,32 @@ public abstract class Vehicle : IRemoteControllable
     public DoorState Doors { get; protected set; } = DoorState.Locked;
     public virtual Coordinate LocationData { get; set; } = null!;
 
+    public double Capacity { get; set; } = 100;
+    public double CurrentLevel { get; set; } = 50;
+
+    [JsonIgnore]
+    public string CapacityInfo => $"{CurrentLevel:F0} / {Capacity:F0}";
+
+    [JsonIgnore]
+    public double FuelPercentage => Capacity > 0 ? (CurrentLevel / Capacity) * 100 : 0;
+
     [JsonIgnore]
     private IVehicleState _state = null!;
 
     public event Action<string>? OnGeofenceViolation;
+
     protected Vehicle()
     {
         InitializeState();
     }
-    public Vehicle(string vin, string brand, string model, double startLat, double startLng)
+
+    public Vehicle(string vin, string brand, string model, double startLat, double startLng, double capacity = 100, double currentLevel = 50)
     {
         Vin = vin;
         Brand = brand;
         Model = model;
+        Capacity = capacity;
+        CurrentLevel = currentLevel;
         LocationData = new Coordinate(startLat, startLng) { VehicleVin = vin };
         InitializeState();
     }
@@ -65,6 +78,7 @@ public abstract class Vehicle : IRemoteControllable
     {
         Doors = doorState;
     }
+
     public void SetGeofence(double lat, double lng, double radius)
     {
         if (LocationData == null)
@@ -75,6 +89,7 @@ public abstract class Vehicle : IRemoteControllable
         LocationData.HomeZoneLongitude = lng;
         LocationData.AllowedRadius = radius;
     }
+
     public void UpdateLocation(double lat, double lng)
     {
         if (LocationData == null)
@@ -100,6 +115,7 @@ public abstract class Vehicle : IRemoteControllable
             }
         }
     }
+
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
         var R = 6371e3;
@@ -128,10 +144,27 @@ public abstract class Vehicle : IRemoteControllable
 
     public virtual void StartEngine()
     {
+        if (CurrentLevel <= 0)
+        {
+            throw new Exception("Неможливо запустити двигун: паливо/заряд на нулі!");
+        }
+
         _state.StartEngine(this);
         _state = new RunningState();
     }
+    public void ConsumeResource(double amount = 1.0)
+    {
+        if (Engine == EngineState.Running)
+        {
+            CurrentLevel -= amount;
 
+            if (CurrentLevel <= 0)
+            {
+                CurrentLevel = 0;
+                StopEngine();
+            }
+        }
+    }
     public void StopEngine()
     {
         _state.StopEngine(this);

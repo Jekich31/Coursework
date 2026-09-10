@@ -11,8 +11,8 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-Q15VTC6\SQLEXPRESS;Database=CarTelematicsDb;Integrated Security=True;TrustServerCertificate=True;");
-        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Database=CarTelematicsDb;Integrated Security=True;TrustServerCertificate=True;");
+        //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

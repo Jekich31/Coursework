@@ -8,6 +8,8 @@
     <sys:String x:Key="m_AddTitle">Додати новий автомобіль</sys:String>
     <sys:String x:Key="m_Vin">VIN-код:</sys:String>
     <sys:String x:Key="m_Type">Тип:</sys:String>
+    <sys:String x:Key="m_TypeGasoline">Бензинове авто</sys:String>
+    <sys:String x:Key="m_TypeElectric">Електромобіль</sys:String>
     <sys:String x:Key="m_Brand">Марка:</sys:String>
     <sys:String x:Key="m_Model">Модель:</sys:String>
     <sys:String x:Key="m_Latitude">Широта (Lat):</sys:String>
@@ -25,6 +27,7 @@
     <sys:String x:Key="m_ColModel">Модель</sys:String>
     <sys:String x:Key="m_ColEngine">Двигун</sys:String>
     <sys:String x:Key="m_ColDoors">Двері</sys:String>
+    <sys:String x:Key="m_ColLevel">Рівень палива/заряду</sys:String>
     <sys:String x:Key="m_ColLocation">Координати</sys:String>
 
     <sys:String x:Key="msg_FillRequired">Будь ласка, заповніть VIN, Марку та Модель!</sys:String>
@@ -34,4 +37,7 @@
     <sys:String x:Key="msg_DbError">Помилка бази даних! Можливо, автомобіль з таким VIN вже існує в базі.</sys:String>
     <sys:String x:Key="msg_DbErrorTitle">Помилка запису в БД</sys:String>
     <sys:String x:Key="msg_ErrorTitle">Помилка</sys:String>
+    <sys:String x:Key="msg_NoFuel">Неможливо запустити двигун: паливо/заряд на нулі!</sys:String>
+    <sys:String x:Key="msg_EngineErrorTitle">Помилка двигуна</sys:String>
+
 </ResourceDictionary>

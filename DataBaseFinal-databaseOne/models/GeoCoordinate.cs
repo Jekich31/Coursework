@@ -10,8 +10,8 @@ public class Coordinate
     public double? HomeZoneLatitude { get; set; }
     public double? HomeZoneLongitude { get; set; }
     public double AllowedRadius { get; set; }
-    public string VehicleVin { get; set; } = null!;
-    public Vehicle Vehicle { get; set; } = null!;
+    public string? VehicleVin { get; set; }
+    public Vehicle? Vehicle { get; set; }
 
     public Coordinate() { }
 
