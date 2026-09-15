@@ -71,7 +71,6 @@ namespace WpfApp2
             LoadVehiclesCommand = new AsyncRelayCommand(LoadVehiclesAsync);
             AddVehicleCommand = new AsyncRelayCommand(AddVehicleAsync);
             DeleteVehicleCommand = new AsyncRelayCommand(DeleteVehicleAsync);
-
             ToggleEngineCommand = new AsyncRelayCommand<Vehicle>(ToggleEngineAsync);
             ToggleDoorsCommand = new AsyncRelayCommand<Vehicle>(ToggleDoorsAsync);
             ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
@@ -89,7 +88,6 @@ namespace WpfApp2
             using (var context = new AppDbContext())
             {
                 await context.Database.EnsureCreatedAsync();
-
                 var list = await context.Vehicles.Include(v => v.LocationData).ToListAsync();
 
                 Vehicles.Clear();
