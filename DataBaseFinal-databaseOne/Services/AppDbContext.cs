@@ -4,15 +4,14 @@ namespace ProjectFIN.models;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Vehicle> Vehicles { get; set; }
-    public DbSet<ElectricCar> ElectricCars { get; set; }
-    public DbSet<GasolineCar> GasolineCars { get; set; }
-    public DbSet<Coordinate> Coordinates { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; } = null!;
+    public DbSet<ElectricCar> ElectricCars { get; set; } = null!;
+    public DbSet<GasolineCar> GasolineCars { get; set; } = null!;
+    public DbSet<Coordinate> Coordinates { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Database=CarTelematicsDb;Integrated Security=True;TrustServerCertificate=True;");
-        //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +22,10 @@ public class AppDbContext : DbContext
             .HasDiscriminator<string>("Discriminator")
             .HasValue<GasolineCar>("GasolineCar")
             .HasValue<ElectricCar>("ElectricCar");
-
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.LocationData)
+            .WithOne(c => c.Vehicle)
+            .HasForeignKey<Coordinate>(c => c.VehicleVin)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

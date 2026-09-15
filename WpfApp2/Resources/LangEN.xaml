@@ -39,5 +39,6 @@
     <sys:String x:Key="msg_ErrorTitle">Error</sys:String>
     <sys:String x:Key="msg_NoFuel">Cannot start engine: fuel/charge is empty!</sys:String>
     <sys:String x:Key="msg_EngineErrorTitle">Engine Error</sys:String>
-
+    <sys:String x:Key="msg_ConfirmExitTitle">Warning! Alarm Notification</sys:String>
+    <sys:String x:Key="msg_ConfirmExitWarning">You have vehicles with running engines or unlocked doors! Are you sure you want to exit?</sys:String>
 </ResourceDictionary>

@@ -1,5 +1,7 @@
 ﻿using ProjectFIN.InterFaces;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,33 +9,60 @@ namespace ProjectFIN.models;
 
 [JsonDerivedType(typeof(ElectricCar), typeDiscriminator: "EV")]
 [JsonDerivedType(typeof(GasolineCar), typeDiscriminator: "Gas")]
-public abstract class Vehicle : IRemoteControllable
+public abstract class Vehicle : IRemoteControllable, INotifyPropertyChanged
 {
     [Key]
     public string Vin { get; init; } = null!;
     public string Brand { get; init; } = null!;
     public string Model { get; init; } = null!;
-    public EngineState Engine { get; protected set; } = EngineState.Stopped;
-    public DoorState Doors { get; protected set; } = DoorState.Locked;
-    public virtual Coordinate LocationData { get; set; } = null!;
+
+    private EngineState _engine = EngineState.Stopped;
+    public EngineState Engine
+    {
+        get => _engine;
+        protected set { _engine = value; OnPropertyChanged(); }
+    }
+
+    private DoorState _doors = DoorState.Locked;
+    public DoorState Doors
+    {
+        get => _doors;
+        protected set { _doors = value; OnPropertyChanged(); }
+    }
+
+    private Coordinate _locationData = null!;
+    public virtual Coordinate LocationData
+    {
+        get => _locationData;
+        set { _locationData = value; OnPropertyChanged(); }
+    }
 
     public double Capacity { get; set; } = 100;
-    public double CurrentLevel { get; set; } = 50;
+
+    private double _currentLevel = 50;
+    public double CurrentLevel
+    {
+        get => _currentLevel;
+        set { _currentLevel = value; OnPropertyChanged(); OnPropertyChanged(nameof(CapacityInfo)); }
+    }
 
     [JsonIgnore]
     public string CapacityInfo => $"{CurrentLevel:F0} / {Capacity:F0}";
 
     [JsonIgnore]
-    public double FuelPercentage => Capacity > 0 ? (CurrentLevel / Capacity) * 100 : 0;
-
-    [JsonIgnore]
     private IVehicleState _state = null!;
 
     public event Action<string>? OnGeofenceViolation;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
     protected Vehicle()
     {
-        InitializeState();
+        _state = new StoppedState();
     }
 
     public Vehicle(string vin, string brand, string model, double startLat, double startLng, double capacity = 100, double currentLevel = 50)
@@ -44,19 +73,7 @@ public abstract class Vehicle : IRemoteControllable
         Capacity = capacity;
         CurrentLevel = currentLevel;
         LocationData = new Coordinate(startLat, startLng) { VehicleVin = vin };
-        InitializeState();
-    }
-
-    private void InitializeState()
-    {
-        if (Engine == EngineState.Running)
-        {
-            _state = new RunningState();
-        }
-        else
-        {
-            _state = new StoppedState();
-        }
+        _state = new StoppedState();
     }
 
     public void SetState(IVehicleState state)
@@ -67,11 +84,7 @@ public abstract class Vehicle : IRemoteControllable
     public void SetEngineState(EngineState engineState)
     {
         Engine = engineState;
-
-        if (Engine == EngineState.Running)
-            _state = new RunningState();
-        else
-            _state = new StoppedState();
+        _state = Engine == EngineState.Running ? new RunningState() : new StoppedState();
     }
 
     public void SetDoorState(DoorState doorState)
@@ -79,85 +92,27 @@ public abstract class Vehicle : IRemoteControllable
         Doors = doorState;
     }
 
-    public void SetGeofence(double lat, double lng, double radius)
-    {
-        if (LocationData == null)
-        {
-            LocationData = new Coordinate { VehicleVin = Vin };
-        }
-        LocationData.HomeZoneLatitude = lat;
-        LocationData.HomeZoneLongitude = lng;
-        LocationData.AllowedRadius = radius;
-    }
-
-    public void UpdateLocation(double lat, double lng)
-    {
-        if (LocationData == null)
-        {
-            LocationData = new Coordinate(lat, lng) { VehicleVin = Vin };
-        }
-        else
-        {
-            LocationData.Latitude = lat;
-            LocationData.Longitude = lng;
-        }
-
-        if (LocationData.HomeZoneLatitude.HasValue && LocationData.HomeZoneLongitude.HasValue)
-        {
-            double distance = CalculateDistance(
-                LocationData.Latitude, LocationData.Longitude,
-                LocationData.HomeZoneLatitude.Value, LocationData.HomeZoneLongitude.Value
-            );
-
-            if (distance > LocationData.AllowedRadius)
-            {
-                OnGeofenceViolation?.Invoke($"ALARM! Vehicle {Brand} {Model} (VIN: {Vin}) left the safe zone! Current distance: {distance:F1} meters out of {LocationData.AllowedRadius}m limit.");
-            }
-        }
-    }
-
-    private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
-    {
-        var R = 6371e3;
-        var phi1 = lat1 * Math.PI / 180;
-        var phi2 = lat2 * Math.PI / 180;
-        var deltaPhi = (lat2 - lat1) * Math.PI / 180;
-        var deltaLambda = (lon2 - lon1) * Math.PI / 180;
-
-        var a = Math.Sin(deltaPhi / 2) * Math.Sin(deltaPhi / 2) +
-                Math.Cos(phi1) * Math.Cos(phi2) *
-                Math.Sin(deltaLambda / 2) * Math.Sin(deltaLambda / 2);
-        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-        return R * c;
-    }
-
-    public void LockDoors()
-    {
-        _state.LockDoors(this);
-    }
-
-    public void UnlockDoors()
-    {
-        _state.UnlockDoors(this);
-    }
+    public void LockDoors() => _state.LockDoors(this);
+    public void UnlockDoors() => _state.UnlockDoors(this);
 
     public virtual void StartEngine()
     {
         if (CurrentLevel <= 0)
-        {
             throw new Exception("Неможливо запустити двигун: паливо/заряд на нулі!");
-        }
 
         _state.StartEngine(this);
-        _state = new RunningState();
     }
+
+    public void StopEngine()
+    {
+        _state.StopEngine(this);
+    }
+
     public void ConsumeResource(double amount = 1.0)
     {
         if (Engine == EngineState.Running)
         {
             CurrentLevel -= amount;
-
             if (CurrentLevel <= 0)
             {
                 CurrentLevel = 0;
@@ -165,10 +120,16 @@ public abstract class Vehicle : IRemoteControllable
             }
         }
     }
-    public void StopEngine()
+
+    public void UpdateLocation(double lat, double lng)
     {
-        _state.StopEngine(this);
-        _state = new StoppedState();
+        if (LocationData == null)
+            LocationData = new Coordinate(lat, lng) { VehicleVin = Vin };
+        else
+        {
+            LocationData.Latitude = lat;
+            LocationData.Longitude = lng;
+        }
     }
 
     public abstract string GetResourceStatus();

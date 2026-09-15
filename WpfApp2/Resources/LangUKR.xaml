@@ -39,5 +39,6 @@
     <sys:String x:Key="msg_ErrorTitle">Помилка</sys:String>
     <sys:String x:Key="msg_NoFuel">Неможливо запустити двигун: паливо/заряд на нулі!</sys:String>
     <sys:String x:Key="msg_EngineErrorTitle">Помилка двигуна</sys:String>
-
+    <sys:String x:Key="msg_ConfirmExitTitle">Увага! Сигнал тривоги</sys:String>
+    <sys:String x:Key="msg_ConfirmExitWarning">У вас залишилися автомобілі з працюючим двигуном або незаблокованими дверима! Ви дійсно бажаєте закрити програму?</sys:String>
 </ResourceDictionary>
