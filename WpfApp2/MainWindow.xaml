@@ -5,6 +5,79 @@
         Title="{DynamicResource m_WindowTitle}" Height="750" Width="1200"
         Background="#F4F6F9" WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+ 
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        CornerRadius="12" 
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#FAFAFA"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Grid>
+                            <Border Background="White" CornerRadius="15" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Color="#000000" Opacity="0.04"/>
+                                </Border.Effect>
+                            </Border>
+                            <StackPanel Margin="10">
+                                <ContentPresenter ContentSource="Header" 
+                  TextElement.FontWeight="Bold" 
+                  TextElement.Foreground="#2C3E50" 
+                  Margin="5,0,0,10"/>
+                                <ContentPresenter />
+                            </StackPanel>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,7 +86,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
         <Menu Grid.Row="0" Background="Transparent" Margin="0,0,0,10">
             <MenuItem Header="{DynamicResource m_Language}">
                 <MenuItem Header="Українська" Command="{Binding ChangeLanguageCommand}" CommandParameter="UKR"/>
@@ -21,51 +93,51 @@
             </MenuItem>
         </Menu>
 
-        <GroupBox Grid.Row="1" Header="{DynamicResource m_AddTitle}" Margin="0,0,0,15" Padding="10" Background="White">
+        <GroupBox Grid.Row="1" Header="{DynamicResource m_AddTitle}" Margin="0,0,0,15" Padding="10">
             <WrapPanel Orientation="Horizontal">
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Vin}"/>
+                    <TextBlock Text="{DynamicResource m_Vin}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Vin, UpdateSourceTrigger=PropertyChanged}" Width="110"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Type}"/>
-                    <ComboBox ItemsSource="{Binding VehicleTypes}" SelectedItem="{Binding SelectedVehicleType}" Width="130"/>
+                    <TextBlock Text="{DynamicResource m_Type}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
+                    <ComboBox ItemsSource="{Binding VehicleTypes}" SelectedItem="{Binding SelectedVehicleType}" Width="130" Height="30"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Brand}"/>
+                    <TextBlock Text="{DynamicResource m_Brand}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Brand, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Model}"/>
+                    <TextBlock Text="{DynamicResource m_Model}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Model, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Latitude}"/>
+                    <TextBlock Text="{DynamicResource m_Latitude}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Latitude, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Longitude}"/>
+                    <TextBlock Text="{DynamicResource m_Longitude}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Longitude, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                 </StackPanel>
 
                 <StackPanel Margin="5">
-                    <TextBlock Text="{DynamicResource m_Capacity}"/>
+                    <TextBlock Text="{DynamicResource m_Capacity}" Margin="2,0,0,3" FontSize="11" Foreground="#7F8C8D"/>
                     <TextBox Text="{Binding Capacity, UpdateSourceTrigger=PropertyChanged}" Width="70"/>
                 </StackPanel>
 
                 <Button Content="{DynamicResource m_AddButton}" Command="{Binding AddVehicleCommand}" 
-                        Margin="10,16,5,5" Padding="12,5" Background="#2ECC71" Foreground="White" FontWeight="Bold"/>
+                        Margin="10,18,5,5" Padding="15,6" Background="#2ECC71"/>
             </WrapPanel>
         </GroupBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
-            <Button Content="{DynamicResource m_Refresh}" Command="{Binding LoadVehiclesCommand}" Margin="0,0,10,0" Padding="10,5"/>
-            <Button Content="{DynamicResource m_Delete}" Command="{Binding DeleteVehicleCommand}" Padding="10,5" Background="#E74C3C" Foreground="White"/>
+            <Button Content="{DynamicResource m_Refresh}" Command="{Binding LoadVehiclesCommand}" Margin="0,0,10,0" Background="#34495E"/>
+            <Button Content="{DynamicResource m_Delete}" Command="{Binding DeleteVehicleCommand}" Background="#E74C3C"/>
         </StackPanel>
 
         <Grid Grid.Row="3">
@@ -88,10 +160,34 @@
                             <Setter Property="Padding" Value="0"/>
                             <Setter Property="Margin" Value="5"/>
                             <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
-                                        <ContentPresenter />
+                                        <Border x:Name="SelectionBorder" 
+                            CornerRadius="18" 
+                            Padding="3" 
+                            Background="Transparent"
+                            BorderThickness="2"
+                            BorderBrush="Transparent">
+                                            <ContentPresenter />
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="SelectionBorder" Property="Background" Value="#153498DB"/>
+                                            </Trigger>
+
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="SelectionBorder" Property="BorderBrush" Value="#3498DB"/>
+                                                <Setter TargetName="SelectionBorder" Property="Background" Value="#203498DB"/>
+                                                <Setter TargetName="SelectionBorder" Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect BlurRadius="12" ShadowDepth="0" Color="#3498DB" Opacity="0.4"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -100,9 +196,9 @@
 
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Width="280" Background="White" CornerRadius="10" Padding="15" Margin="5">
+                            <Border Width="280" Background="White" CornerRadius="16" Padding="15" Margin="5">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.08"/>
+                                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Direction="270" Color="#000000" Opacity="0.07"/>
                                 </Border.Effect>
 
                                 <StackPanel>
@@ -112,7 +208,7 @@
                                             <TextBlock Text="{Binding Model}" FontSize="13" Foreground="#7F8C8D"/>
                                         </StackPanel>
 
-                                        <Border DockPanel.Dock="Right" CornerRadius="5" Padding="8,3" VerticalAlignment="Top">
+                                        <Border DockPanel.Dock="Right" CornerRadius="10" Padding="8,4" VerticalAlignment="Top">
                                             <Border.Style>
                                                 <Style TargetType="Border">
                                                     <Setter Property="Background" Value="#E74C3C"/>
@@ -169,12 +265,28 @@
                                         <Button Content="{DynamicResource m_ToggleEngine}" 
                                                 Command="{Binding DataContext.ToggleEngineCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
-                                                Background="#3498DB" Foreground="White" BorderThickness="0" Padding="4" Margin="0,0,3,0"/>
+                                                Background="#3498DB" Padding="4" Margin="0,0,3,0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
 
                                         <Button Content="{DynamicResource m_ToggleDoors}" 
                                                 Command="{Binding DataContext.ToggleDoorsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
-                                                Background="#E67E22" Foreground="White" BorderThickness="0" Padding="4" Margin="3,0,0,0"/>
+                                                Background="#E67E22" Padding="4" Margin="3,0,0,0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
                                     </UniformGrid>
                                 </StackPanel>
                             </Border>
@@ -183,9 +295,9 @@
                 </ListBox>
             </ScrollViewer>
 
-            <Border Grid.Column="1" Margin="10,5,5,5" CornerRadius="10" ClipToBounds="True" Background="White">
+            <Border Grid.Column="1" Margin="10,5,5,5" CornerRadius="16" ClipToBounds="True" Background="White">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.08"/>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="3" Direction="270" Color="#000000" Opacity="0.07"/>
                 </Border.Effect>
                 <wv2:WebView2 x:Name="mapWebView" />
             </Border>
